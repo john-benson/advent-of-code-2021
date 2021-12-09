@@ -24,17 +24,6 @@ const convert = (current, previous) => {
 
   if (current.length === 7) {
     return { eight: current }
-    //return '8';
-  }
-
-  if (current.length === 5) {
-    //return { three: current, two: current, five: current }
-    //return '?'
-  }
-
-  if (current.length === 6) {
-    //return { zero: current, six: current, nine: current }
-    //return '?'
   }
 
   return {}
@@ -47,19 +36,13 @@ const generateMappings = (signals) => {
     .map(convert)
     .reduce((acc, cur) => ({ ...acc, ...cur }), {})
 
-  const rightPossibilities = known.one;
-
   const top = known.seven.filter(i => !known.one.includes(i))[0];
-  const middleAndTopLeft = known.four.filter(i => !known.one.includes(i));
-  const bottomLeftPossibilities = known.eight.filter(i => !known.four.includes(i) && !top == i)
-  const bottomPossibilities = [ ...bottomLeftPossibilities ]
 
   const sixSegment = signalParts.filter(i => i.length === 6);
   const fiveSegment = signalParts.filter(i => i.length === 5);
 
-  // find the entry in Zero Six Nine that doesn't have both right options
   const six = sixSegment
-    .filter(signal => !rightPossibilities.every(i => signal.split('').includes(i)));
+    .filter(signal => !known.one.every(i => signal.split('').includes(i)));
 
   known.six = six.map(i => i.split('')).flatMap(i => i)
 
@@ -71,8 +54,9 @@ const generateMappings = (signals) => {
       .filter(i => i.length === 1)
       .flatMap(i => i)[0]
 
-  const topRight = rightPossibilities.filter(opt => !known.six.includes(opt))[0]
-  const bottomRight = rightPossibilities.filter(opt => known.six.includes(opt))[0]
+  const topRight = known.one.filter(opt => !known.six.includes(opt))[0]
+
+  const bottomRight = known.one.filter(opt => known.six.includes(opt))[0]
 
   const middle = fiveSegment
     .map(signal =>
@@ -81,7 +65,8 @@ const generateMappings = (signals) => {
     .filter(i => i.length === 1)
     .flatMap(i => i)[0]
 
-  const topLeft = middleAndTopLeft.filter(i => ![topRight, bottomRight, top, middle, bottom].includes(i))[0]
+  const topLeft = known.four.filter(i => !known.one.includes(i))
+    .filter(i => ![topRight, bottomRight, top, middle, bottom].includes(i))[0]
 
   const bottomLeft = ['a','b','c','d','e','f','g'].filter(i => ![topRight, bottomRight, top, middle, bottom, topLeft].includes(i))[0]
 
@@ -102,16 +87,12 @@ const generateMappings = (signals) => {
 const convertSignal = ([ signals, outputs ]) => {
   const mappings = generateMappings(signals);
 
-  console.log(mappings);
-
-  console.log(outputs)
   return outputs.split(' ').map(output => {
     const outputKeys = output.split('');
 
     const result = Object.entries(mappings).filter(
       ([ number, mapping ]) => mapping.length == outputKeys.length && mapping.every(i => output.includes(i))
     )[0][0]
-    console.log(result);
 
     return result;
   }).join('')
@@ -119,7 +100,7 @@ const convertSignal = ([ signals, outputs ]) => {
 }
 
 console.log(
-input.map(convertSignal).map(Number).reduce((acc, cur) => acc + cur, 0)
+  input.map(convertSignal).map(Number).reduce((acc, cur) => acc + cur, 0)
 )
 
 //console.log(input.map(convertSignal));
