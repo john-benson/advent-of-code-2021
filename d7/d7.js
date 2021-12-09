@@ -15,13 +15,10 @@ const triangle = n => {
 }
 
 for (let i = minPosition; i <= maxPosition; i++){
-  //console.log(`Try position ${i}`)
-
   const res = positions.reduce(
     (acc, cur) => triangle(Math.abs(cur - i)) + acc, 0
   )
 
-  //console.log(`Cost ${res}`)
   if (res < minCost) {
     minCost = res;
   }
