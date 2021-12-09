@@ -40,7 +40,7 @@ const convert = (current, previous) => {
   return {}
 }
 
-const convertSignal = ([ signals, outputs ]) => {
+const generateMappings = (signals) => {
   const signalParts = signals.split(' ');
 
   const known = signalParts
@@ -85,7 +85,7 @@ const convertSignal = ([ signals, outputs ]) => {
 
   const bottomLeft = ['a','b','c','d','e','f','g'].filter(i => ![topRight, bottomRight, top, middle, bottom, topLeft].includes(i))[0]
 
-  const mappings = {
+  return {
     1: known.one.sort(),
     2: [top, topRight, middle, bottomLeft, bottom].sort(),
     3: [top, topRight, middle, bottomRight, bottom].sort(),
@@ -97,6 +97,10 @@ const convertSignal = ([ signals, outputs ]) => {
     9: [top, topLeft, topRight, middle, bottom, bottomRight].sort(),
     0: [top, bottom, topLeft, topRight, bottomLeft, bottomRight].sort()
   }
+}
+
+const convertSignal = ([ signals, outputs ]) => {
+  const mappings = generateMappings(signals);
 
   console.log(mappings);
 
