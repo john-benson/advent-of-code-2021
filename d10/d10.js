@@ -48,9 +48,8 @@ const solve = (brackets) => {
 }
 
 const fix = (brackets) => {
-  console.log(brackets)
 
-  let toCompare = false;
+  let isCorrupt = false;
   let stack = [];
   let toAdd = [];
 
@@ -64,16 +63,16 @@ const fix = (brackets) => {
       expected = stack.pop();
 
       if (expected != bracket) {
-        toCompare = true;
+        isCorrupt = true;
       }
     }
   }
-  if (toCompare) {
+
+  if (isCorrupt) {
     return []
   }
 
   stack.reverse();
-
 
   return stack;
 }
@@ -81,8 +80,6 @@ const fix = (brackets) => {
 scores = input.map(fix)
   .filter(i => i.length != 0)
   .map(i => i.reduce((acc, cur) => (acc * 5) + (SCORES[cur]), 0));
-
-console.log(scores);
 
 scores.sort((a,b) => a-b)
 
