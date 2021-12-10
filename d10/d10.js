@@ -12,14 +12,12 @@ const PAIRS = {
   '<': '>'
 }
 
-
 const SCORES = {
   '}': 3,
   ')': 1,
   ']': 2,
   '>': 4
 }
-
 
 const OG_SCORES = {
   '}': 1197,
@@ -52,7 +50,7 @@ const solve = (brackets) => {
 const fix = (brackets) => {
   console.log(brackets)
 
-  let wasBroken = false;
+  let toCompare = false;
   let stack = [];
   let toAdd = [];
 
@@ -65,14 +63,12 @@ const fix = (brackets) => {
     } else {
       expected = stack.pop();
 
-      console.log('Comparing', expected, bracket)
-
       if (expected != bracket) {
-        wasBroken = true;
+        toCompare = true;
       }
     }
   }
-  if (wasBroken) {
+  if (toCompare) {
     return []
   }
 
@@ -81,10 +77,6 @@ const fix = (brackets) => {
 
   return stack;
 }
-
-//console.log(
-//  input.map(solve).filter(i => i).map(i => SCORES[i]).reduce((acc, cur) => acc + cur, 0)
-//)
 
 scores = input.map(fix)
   .filter(i => i.length != 0)
